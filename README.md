@@ -68,8 +68,8 @@ node server.js
 ```
 
 5. Open the frontend
-Open `frontend/index.html` directly in your browser
-
+Frontend: https://sibusisiwe0405.github.io/job-tracker
+- API: https://your-railway-url.up.railway.app
 ---
 
 ##  API Endpoints
@@ -100,7 +100,7 @@ When an application status is updated, an automatic email notification is sent v
 
 ---
 
-## 👩🏽 Author
+## Author
 
 **Sibusisiwe Ndlovu**
 - GitHub: (https://github.com/sibusisiwe0405)
