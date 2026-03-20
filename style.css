@@ -270,7 +270,7 @@ body {
 }
 
 .modal-body { 
-  padding: 0 24px 24px; 
+   padding: 24px;
   max-height: 70vh;
   overflow-y: auto;
 }
@@ -354,9 +354,10 @@ body {
 }
 
 .detail-item p {
-  font-size: 14px;
+   font-size: 14px;
   color: #1a1a1a;
   font-weight: 500;
+  word-break: break-all;
 }
 
 .detail-item.full-width {
