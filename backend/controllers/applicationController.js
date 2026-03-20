@@ -40,10 +40,15 @@ const updateApplication = async (req, res) => {
     const previous = await Application.findById(req.params.id);
     if (!previous) return res.status(404).json({ message: 'Application not found' });
 
+    // Merge interview data explicitly
+    if (req.body.interview) {
+      req.body.interview = { ...previous.interview?.toObject(), ...req.body.interview };
+    }
+
     const updated = await Application.findByIdAndUpdate(
       req.params.id,
-      req.body,
-      { new: true }
+      { $set: req.body },
+      { new: true, runValidators: true }
     );
 
     // Fire email if status changed

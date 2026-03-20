@@ -1,7 +1,7 @@
-const API = 'https://job-tracker-sibusisiwe.up.railway.app/api/applications';let allApplications = [];
+const API = 'https://job-tracker-sibusisiwe.up.railway.app/api/applications';
+let allApplications = [];
 let currentFilter = 'All';
 
-// Load all applications on page load
 document.addEventListener('DOMContentLoaded', fetchApplications);
 
 async function fetchApplications() {
@@ -17,8 +17,6 @@ async function fetchApplications() {
 
 function renderApplications() {
   const grid = document.getElementById('applications-grid');
-  const emptyState = document.getElementById('empty-state');
-
   const filtered = currentFilter === 'All'
     ? allApplications
     : allApplications.filter(a => a.status === currentFilter);
@@ -39,18 +37,20 @@ function renderApplications() {
     card.className = `app-card ${app.status}`;
     card.innerHTML = `
       <div class="card-header">
-        <div>
-          <p class="company-name">${app.company}</p>
-          <p class="role-name">${app.role}</p>
-        </div>
-        <span class="status-badge badge-${app.status}">${app.status}</span>
+      <div>
+        <p class="company-name">${app.company}</p>
+        <p class="role-name">${app.role}</p>
+      </div>
+      <span class="status-badge badge-${app.status}">${app.status}</span>
       </div>
       ${app.notes ? `<p class="card-notes">${app.notes}</p>` : ''}
       <p class="card-date">Applied: ${date}</p>
-      ${app.jobUrl ? `<a href="${app.jobUrl}" target="_blank" style="font-size:12px; color:#2e5fa3; display:block; margin-bottom:12px;">View Job Posting ↗</a>` : ''}
+      ${app.interview && app.interview.date ? `<p class="card-date">📅 Interview: ${new Date(app.interview.date).toLocaleDateString('en-ZA', { year: 'numeric', month: 'short', day: 'numeric' })}</p>` : ''}
+      ${app.jobUrl ? `<a href="${app.jobUrl}" target="_blank" style="font-size:12px; color:#2e5fa3; display:block; margin-bottom:12px; word-break:break-all;">View Job Posting ↗</a>` : ''}
       <div class="card-actions">
-        <button class="btn-edit" onclick="showEditForm('${app._id}')">Edit</button>
-        <button class="btn-delete" onclick="deleteApplication('${app._id}')">Delete</button>
+      <button class="btn-edit" onclick="showDetailModal('${app._id}')">View</button>
+      <button class="btn-edit" onclick="showEditForm('${app._id}')">Edit</button>
+      <button class="btn-delete" onclick="deleteApplication('${app._id}')">Delete</button>
       </div>
     `;
     grid.appendChild(card);
@@ -72,6 +72,11 @@ function filterApplications(status, btn) {
   renderApplications();
 }
 
+function toggleInterviewFields() {
+  const status = document.getElementById('status').value;
+  document.getElementById('interview-fields').style.display = status === 'Interview' ? 'block' : 'none';
+}
+
 function showAddForm() {
   document.getElementById('modal-title').textContent = 'Add Application';
   document.getElementById('edit-id').value = '';
@@ -79,6 +84,7 @@ function showAddForm() {
   document.getElementById('role').value = '';
   document.getElementById('jobUrl').value = '';
   document.getElementById('notes').value = '';
+  document.getElementById('interview-fields').style.display = 'none';
   document.getElementById('status-group').style.display = 'none';
   document.getElementById('modal-overlay').classList.add('open');
 }
@@ -95,11 +101,108 @@ function showEditForm(id) {
   document.getElementById('notes').value = app.notes || '';
   document.getElementById('status').value = app.status;
   document.getElementById('status-group').style.display = 'block';
+
+  if (app.status === 'Interview') {
+    document.getElementById('interview-fields').style.display = 'block';
+    document.getElementById('interview-type').value = app.interview?.type || '';
+    document.getElementById('interview-date').value = app.interview?.date
+      ? new Date(app.interview.date).toISOString().slice(0, 16) : '';
+    document.getElementById('interview-round').value = app.interview?.round || '';
+    document.getElementById('interview-interviewer').value = app.interview?.interviewer || '';
+    document.getElementById('interview-notes').value = app.interview?.notes || '';
+  } else {
+    document.getElementById('interview-fields').style.display = 'none';
+  }
+
   document.getElementById('modal-overlay').classList.add('open');
+}
+
+function showDetailModal(id) {
+  const app = allApplications.find(a => a._id === id);
+  if (!app) return;
+
+  document.getElementById('detail-company').textContent = app.company;
+  document.getElementById('detail-role').textContent = app.role;
+
+  const date = new Date(app.appliedDate).toLocaleDateString('en-ZA', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+
+  let html = `
+    <div class="detail-section">
+      <p class="detail-section-title">Application Info</p>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <label>Status</label>
+          <p><span class="status-badge badge-${app.status}">${app.status}</span></p>
+        </div>
+        <div class="detail-item">
+          <label>Applied Date</label>
+          <p>${date}</p>
+        </div>
+        ${app.jobUrl ? `
+        <div class="detail-item full-width">
+          <label>Job URL</label>
+          <p><a href="${app.jobUrl}" target="_blank" style="color:#2e5fa3">${app.jobUrl}</a></p>
+        </div>` : ''}
+        ${app.notes ? `
+        <div class="detail-item full-width">
+          <label>Notes</label>
+          <p>${app.notes}</p>
+        </div>` : ''}
+      </div>
+    </div>
+  `;
+
+  if (app.interview) {
+    const interviewDate = app.interview.date
+      ? new Date(app.interview.date).toLocaleDateString('en-ZA', {
+          year: 'numeric', month: 'long', day: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        })
+      : 'Not set';
+
+    html += `
+      <div class="detail-section">
+        <p class="detail-section-title">Interview Details</p>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Interview Type</label>
+            <p>${app.interview.type || 'Not specified'}</p>
+          </div>
+          <div class="detail-item">
+            <label>Round</label>
+            <p>${app.interview.round || 'Not specified'}</p>
+          </div>
+          <div class="detail-item full-width">
+            <label>Date & Time</label>
+            <p>${interviewDate}</p>
+          </div>
+          ${app.interview.interviewer ? `
+          <div class="detail-item full-width">
+            <label>Interviewer / Panel</label>
+            <p>${app.interview.interviewer}</p>
+          </div>` : ''}
+          ${app.interview.notes ? `
+          <div class="detail-item full-width">
+            <label>Interview Notes</label>
+            <p>${app.interview.notes}</p>
+          </div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  document.getElementById('detail-body').innerHTML = html;
+  document.getElementById('detail-overlay').classList.add('open');
 }
 
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function closeDetailModal() {
+  document.getElementById('detail-overlay').classList.remove('open');
 }
 
 async function saveApplication() {
@@ -112,13 +215,25 @@ async function saveApplication() {
     return;
   }
 
+  const status = id ? document.getElementById('status').value : 'Applied';
+
   const data = {
     company,
     role,
     jobUrl: document.getElementById('jobUrl').value.trim(),
     notes: document.getElementById('notes').value.trim(),
-    ...(id && { status: document.getElementById('status').value })
+    ...(id && { status })
   };
+
+  if (status === 'Interview') {
+    data.interview = {
+      type: document.getElementById('interview-type').value,
+      date: document.getElementById('interview-date').value,
+      round: document.getElementById('interview-round').value,
+      interviewer: document.getElementById('interview-interviewer').value.trim(),
+      notes: document.getElementById('interview-notes').value.trim()
+    };
+  }
 
   try {
     const res = await fetch(id ? `${API}/${id}` : API, {
@@ -145,4 +260,10 @@ async function deleteApplication(id) {
   } catch (err) {
     console.error('Error deleting application:', err);
   }
+}
+function setActiveNavItem(btn, status) {
+  currentFilter = status;
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderApplications();
 }

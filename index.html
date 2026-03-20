@@ -14,8 +14,11 @@
       <span class="logo-text">JobTrack</span>
     </div>
     <nav>
-      <a href="#" class="nav-item active">Dashboard</a>
+      <a href="#" class="nav-item active" onclick="setActiveNavItem(this, 'All')">Dashboard</a>
       <a href="#" class="nav-item" onclick="showAddForm()">Add Application</a>
+      <a href="#" class="nav-item" onclick="setActiveNavItem(this, 'Interview')">Interviews</a>
+      <a href="#" class="nav-item" onclick="setActiveNavItem(this, 'Offer')">Offers</a>
+      <a href="#" class="nav-item" onclick="setActiveNavItem(this, 'Rejected')">Rejected</a>
     </nav>
     <div class="sidebar-footer">
       <p>Built by Sibusisiwe</p>
@@ -74,43 +77,95 @@
   </main>
 
   <!-- Modal -->
-  <div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
-    <div class="modal" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h2 id="modal-title">Add Application</h2>
-        <button class="close-btn" onclick="closeModal()">✕</button>
+  <!-- Edit/Add Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2 id="modal-title">Add Application</h2>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id" />
+      <div class="form-group">
+        <label>Company *</label>
+        <input type="text" id="company" placeholder="e.g. Google" />
       </div>
-      <div class="modal-body">
-        <input type="hidden" id="edit-id" />
+      <div class="form-group">
+        <label>Role *</label>
+        <input type="text" id="role" placeholder="e.g. Junior Backend Developer" />
+      </div>
+      <div class="form-group">
+        <label>Job URL</label>
+        <input type="text" id="jobUrl" placeholder="https://..." />
+      </div>
+      <div class="form-group" id="status-group" style="display:none">
+        <label>Status</label>
+        <select id="status" onchange="toggleInterviewFields()">
+          <option value="Applied">Applied</option>
+          <option value="Interview">Interview</option>
+          <option value="Offer">Offer</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="notes" placeholder="Any notes about this application..."></textarea>
+      </div>
+
+      <!-- Interview Fields -->
+      <div id="interview-fields" style="display:none">
+        <div class="section-divider">Interview Details</div>
         <div class="form-group">
-          <label>Company *</label>
-          <input type="text" id="company" placeholder="e.g. Google" />
-        </div>
-        <div class="form-group">
-          <label>Role *</label>
-          <input type="text" id="role" placeholder="e.g. Junior Backend Developer" />
-        </div>
-        <div class="form-group">
-          <label>Job URL</label>
-          <input type="text" id="jobUrl" placeholder="https://..." />
-        </div>
-        <div class="form-group" id="status-group" style="display:none">
-          <label>Status</label>
-          <select id="status">
-            <option value="Applied">Applied</option>
-            <option value="Interview">Interview</option>
-            <option value="Offer">Offer</option>
-            <option value="Rejected">Rejected</option>
+          <label>Interview Type</label>
+          <select id="interview-type">
+            <option value="">Select type</option>
+            <option value="Remote">Remote</option>
+            <option value="On-site">On-site</option>
+            <option value="Hybrid">Hybrid</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Notes</label>
-          <textarea id="notes" placeholder="Any notes about this application..."></textarea>
+          <label>Interview Date & Time</label>
+          <input type="datetime-local" id="interview-date" />
         </div>
-        <button class="btn-primary full-width" onclick="saveApplication()">Save Application</button>
+        <div class="form-group">
+          <label>Interview Round</label>
+          <select id="interview-round">
+            <option value="">Select round</option>
+            <option value="First Round">First Round</option>
+            <option value="Second Round">Second Round</option>
+            <option value="Final Round">Final Round</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Interviewer / Panel</label>
+          <input type="text" id="interview-interviewer" placeholder="e.g. John Smith, HR Team" />
+        </div>
+        <div class="form-group">
+          <label>Interview Notes</label>
+          <textarea id="interview-notes" placeholder="Preparation notes, topics to cover..."></textarea>
+        </div>
       </div>
+
+      <button class="btn-primary full-width" onclick="saveApplication()">Save Application</button>
     </div>
   </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detail-overlay" onclick="closeDetailModal()">
+  <div class="modal modal-large" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <h2 id="detail-company"></h2>
+        <p id="detail-role" style="color:#666; font-size:14px; margin-top:4px;"></p>
+      </div>
+      <button class="close-btn" onclick="closeDetailModal()">✕</button>
+    </div>
+    <div class="modal-body" id="detail-body">
+    </div>
+  </div>
+</div>
 
   <script src="app.js"></script>
 </body>
