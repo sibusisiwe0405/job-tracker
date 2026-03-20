@@ -1,11 +1,11 @@
-# 💼 JobTrack — Job Application Tracker
+#  JobTrack — Job Application Tracker
 
 A full stack web application that helps job seekers track and manage their applications in one place. Built with a Node.js/Express REST API, MongoDB database, and a clean vanilla JS frontend.
 
 ---
 
 
-## ✨ Features
+##  Features
 
 - Add, edit and delete job applications
 - Track application status — Applied, Interview, Offer, Rejected
@@ -16,7 +16,7 @@ A full stack web application that helps job seekers track and manage their appli
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 **Backend**
 - Node.js
@@ -33,7 +33,7 @@ A full stack web application that helps job seekers track and manage their appli
 
 ---
 
-## ⚙️ Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Node.js installed
@@ -72,7 +72,7 @@ Open `frontend/index.html` directly in your browser
 
 ---
 
-## 📡 API Endpoints
+##  API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -84,13 +84,13 @@ Open `frontend/index.html` directly in your browser
 
 ---
 
-## 📧 Email Notifications
+##  Email Notifications
 
 When an application status is updated, an automatic email notification is sent via the SendGrid API. This demonstrates real-world third party service integration and webhook-style event driven logic.
 
 ---
 
-## 🔮 Future Improvements
+##  Future Improvements
 
 - User authentication with JWT
 - Email notifications sent to individual user accounts
@@ -100,9 +100,8 @@ When an application status is updated, an automatic email notification is sent v
 
 ---
 
-## 👩🏽‍💻 Author
+## 👩🏽 Author
 
 **Sibusisiwe Ndlovu**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [your linkedin url]
-- Portfolio: [your portfolio url]
+- GitHub: (https://github.com/sibusisiwe0405)
+
