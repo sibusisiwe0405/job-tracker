@@ -269,7 +269,7 @@ if (app.status === 'Offer' && app.offer) {
       </div>
     `;
   }
-  
+
   document.getElementById('detail-body').innerHTML = html;
   document.getElementById('detail-overlay').classList.add('open');
 }
@@ -293,6 +293,9 @@ async function saveApplication() {
   }
 
   const status = id ? document.getElementById('status').value : 'Applied';
+
+  console.log('status is:', status);
+console.log('offer block will run:', status === 'Offer');
 
   const data = {
     company,
@@ -324,6 +327,7 @@ async function saveApplication() {
       notes: document.getElementById('offer-notes').value.trim()
     };
   }
+console.log('data being sent:', JSON.stringify(data));
 
   try {
     const res = await fetch(id ? `${API}/${id}` : API, {

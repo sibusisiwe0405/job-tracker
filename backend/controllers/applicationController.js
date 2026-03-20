@@ -40,19 +40,22 @@ const updateApplication = async (req, res) => {
     const previous = await Application.findById(req.params.id);
     if (!previous) return res.status(404).json({ message: 'Application not found' });
 
-    // Merge interview data explicitly
+    // Manually assign each field
+    if (req.body.company) previous.company = req.body.company;
+    if (req.body.role) previous.role = req.body.role;
+    if (req.body.status) previous.status = req.body.status;
+    if (req.body.jobUrl !== undefined) previous.jobUrl = req.body.jobUrl;
+    if (req.body.notes !== undefined) previous.notes = req.body.notes;
+
     if (req.body.interview) {
-      req.body.interview = { ...previous.interview?.toObject(), ...req.body.interview };
+      previous.interview = req.body.interview;
     }
+ 
     if (req.body.offer) {
-      req.body.offer = { ...previous.offer?.toObject(), ...req.body.offer };
+      previous.offer = req.body.offer;
     }
 
-    const updated = await Application.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true, runValidators: true }
-    );
+    const updated = await previous.save();
 
     // Fire email if status changed
     if (req.body.status && req.body.status !== previous.status) {
@@ -61,7 +64,7 @@ const updateApplication = async (req, res) => {
 
     res.status(200).json(updated);
   } catch (error) {
-    res.status(400).json({ message: 'Error updating application', error });
+    res.status(400).json({ message: 'Error updating application', error: error.message });
   }
 };
 
