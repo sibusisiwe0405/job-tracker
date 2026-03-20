@@ -44,6 +44,9 @@ const updateApplication = async (req, res) => {
     if (req.body.interview) {
       req.body.interview = { ...previous.interview?.toObject(), ...req.body.interview };
     }
+    if (req.body.offer) {
+      req.body.offer = { ...previous.offer?.toObject(), ...req.body.offer };
+    }
 
     const updated = await Application.findByIdAndUpdate(
       req.params.id,

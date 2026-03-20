@@ -145,9 +145,65 @@
           <label>Interview Notes</label>
           <textarea id="interview-notes" placeholder="Preparation notes, topics to cover..."></textarea>
         </div>
+     </div>
+
+      <!-- Offer Fields -->
+      <div id="offer-fields" style="display:none">
+        <div class="section-divider">Offer Details</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Salary Amount</label>
+            <input type="number" id="offer-salary" placeholder="e.g. 25000" />
+          </div>
+          <div class="form-group">
+            <label>Currency</label>
+            <select id="offer-currency">
+              <option value="ZAR">ZAR</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Work Type</label>
+          <select id="offer-worktype">
+            <option value="">Select type</option>
+            <option value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="On-site">On-site</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Contract Type</label>
+          <select id="offer-contracttype">
+            <option value="">Select type</option>
+            <option value="Permanent">Permanent</option>
+            <option value="Contract">Contract</option>
+            <option value="Part-time">Part-time</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Start Date</label>
+            <input type="date" id="offer-startdate" />
+          </div>
+          <div class="form-group">
+            <label>Offer Deadline</label>
+            <input type="date" id="offer-deadline" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Benefits</label>
+          <input type="text" id="offer-benefits" placeholder="e.g. Medical aid, 20 days leave" />
+        </div>
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="offer-notes" placeholder="Any additional notes about the offer..."></textarea>
+        </div>
       </div>
 
-      <button class="btn-primary full-width" onclick="saveApplication()">Save Application</button>
+      <button class="btn-primary full-width" onclick="saveApplication()">Save Application</button>   
     </div>
   </div>
 </div>

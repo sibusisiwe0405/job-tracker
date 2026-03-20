@@ -22,7 +22,7 @@ const applicationSchema = new mongoose.Schema({
   },
 
   // offer details
-  Offer: {
+  offer: {
     salary: { type: Number },
     currency: { type: String, default: 'ZAR'},
     workType: { type: String, enum: ["Remote", "On-site", "Hybrid"]},

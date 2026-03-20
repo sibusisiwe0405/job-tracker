@@ -363,3 +363,9 @@ body {
 .detail-item.full-width {
   grid-column: 1 / -1;
 }
+/* Form row - two columns side by side */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
