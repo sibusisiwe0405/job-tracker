@@ -1,5 +1,4 @@
-const API = 'http://localhost:3000/api/applications';
-let allApplications = [];
+const API = 'https://job-tracker-sibusisiwe.up.railway.app/api/applications';let allApplications = [];
 let currentFilter = 'All';
 
 // Load all applications on page load
