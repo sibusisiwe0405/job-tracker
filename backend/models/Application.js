@@ -19,6 +19,18 @@ const applicationSchema = new mongoose.Schema({
     round: { type: String, enum: ['First Round', 'Second Round', 'Final Round'] },
     interviewer: { type: String },
     notes: { type: String }
+  },
+
+  // offer details
+  Offer: {
+    salary: { type: Number },
+    currency: { type: String, default: 'ZAR'},
+    workType: { type: String, enum: ["Remote", "On-site", "Hybrid"]},
+    contractType: { type: String, enum: ["Full-time", "Part-time", "Contract"]},
+    startDate: { type: Date },
+    deadline: { type: Date },
+    benefits: { type: String },
+    notes: { type: String }
   }
 
 }, { timestamps: true });

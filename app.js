@@ -73,9 +73,12 @@ function filterApplications(status, btn) {
 }
 
 function toggleInterviewFields() {
+
   const status = document.getElementById('status').value;
   document.getElementById('interview-fields').style.display = status === 'Interview' ? 'block' : 'none';
+  document.getElementById('offer-fields').style.display = status === 'Offer' ? 'block' : 'none';
 }
+
 
 function showAddForm() {
   document.getElementById('modal-title').textContent = 'Add Application';
@@ -85,6 +88,7 @@ function showAddForm() {
   document.getElementById('jobUrl').value = '';
   document.getElementById('notes').value = '';
   document.getElementById('interview-fields').style.display = 'none';
+  document.getElementById('offer-fields').style.display = 'none';
   document.getElementById('status-group').style.display = 'none';
   document.getElementById('modal-overlay').classList.add('open');
 }
@@ -102,16 +106,34 @@ function showEditForm(id) {
   document.getElementById('status').value = app.status;
   document.getElementById('status-group').style.display = 'block';
 
+  // Interview fields
   if (app.status === 'Interview') {
     document.getElementById('interview-fields').style.display = 'block';
+    document.getElementById('offer-fields').style.display = 'none';
     document.getElementById('interview-type').value = app.interview?.type || '';
     document.getElementById('interview-date').value = app.interview?.date
       ? new Date(app.interview.date).toISOString().slice(0, 16) : '';
     document.getElementById('interview-round').value = app.interview?.round || '';
     document.getElementById('interview-interviewer').value = app.interview?.interviewer || '';
     document.getElementById('interview-notes').value = app.interview?.notes || '';
+  }
+  // Offer fields
+  else if (app.status === 'Offer') {
+    document.getElementById('offer-fields').style.display = 'block';
+    document.getElementById('interview-fields').style.display = 'none';
+    document.getElementById('offer-salary').value = app.offer?.salary || '';
+    document.getElementById('offer-currency').value = app.offer?.currency || 'ZAR';
+    document.getElementById('offer-worktype').value = app.offer?.workType || '';
+    document.getElementById('offer-contracttype').value = app.offer?.contractType || '';
+    document.getElementById('offer-startdate').value = app.offer?.startDate
+      ? new Date(app.offer.startDate).toISOString().slice(0, 10) : '';
+    document.getElementById('offer-deadline').value = app.offer?.deadline
+      ? new Date(app.offer.deadline).toISOString().slice(0, 10) : '';
+    document.getElementById('offer-benefits').value = app.offer?.benefits || '';
+    document.getElementById('offer-notes').value = app.offer?.notes || '';
   } else {
     document.getElementById('interview-fields').style.display = 'none';
+    document.getElementById('offer-fields').style.display = 'none';
   }
 
   document.getElementById('modal-overlay').classList.add('open');
@@ -192,7 +214,62 @@ function showDetailModal(id) {
       </div>
     `;
   }
+if (app.status === 'Offer' && app.offer) {
+    const startDate = app.offer.startDate
+      ? new Date(app.offer.startDate).toLocaleDateString('en-ZA', {
+          year: 'numeric', month: 'long', day: 'numeric'
+        })
+      : 'Not specified';
 
+    const deadline = app.offer.deadline
+      ? new Date(app.offer.deadline).toLocaleDateString('en-ZA', {
+          year: 'numeric', month: 'long', day: 'numeric'
+        })
+      : 'Not specified';
+
+    const salary = app.offer.salary
+      ? `${app.offer.currency} ${Number(app.offer.salary).toLocaleString()}`
+      : 'Not specified';
+
+    html += `
+      <div class="detail-section">
+        <p class="detail-section-title">Offer Details</p>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Salary</label>
+            <p>${salary}</p>
+          </div>
+          <div class="detail-item">
+            <label>Work Type</label>
+            <p>${app.offer.workType || 'Not specified'}</p>
+          </div>
+          <div class="detail-item">
+            <label>Contract Type</label>
+            <p>${app.offer.contractType || 'Not specified'}</p>
+          </div>
+          <div class="detail-item">
+            <label>Start Date</label>
+            <p>${startDate}</p>
+          </div>
+          <div class="detail-item full-width">
+            <label>Offer Deadline</label>
+            <p>${deadline}</p>
+          </div>
+          ${app.offer.benefits ? `
+          <div class="detail-item full-width">
+            <label>Benefits</label>
+            <p>${app.offer.benefits}</p>
+          </div>` : ''}
+          ${app.offer.notes ? `
+          <div class="detail-item full-width">
+            <label>Notes</label>
+            <p>${app.offer.notes}</p>
+          </div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+  
   document.getElementById('detail-body').innerHTML = html;
   document.getElementById('detail-overlay').classList.add('open');
 }
@@ -232,6 +309,19 @@ async function saveApplication() {
       round: document.getElementById('interview-round').value,
       interviewer: document.getElementById('interview-interviewer').value.trim(),
       notes: document.getElementById('interview-notes').value.trim()
+    };
+  }
+
+  if (status === 'Offer') {
+    data.offer = {
+      salary: document.getElementById('offer-salary').value,
+      currency: document.getElementById('offer-currency').value,
+      workType: document.getElementById('offer-worktype').value,
+      contractType: document.getElementById('offer-contracttype').value,
+      startDate: document.getElementById('offer-startdate').value,
+      deadline: document.getElementById('offer-deadline').value,
+      benefits: document.getElementById('offer-benefits').value.trim(),
+      notes: document.getElementById('offer-notes').value.trim()
     };
   }
 
