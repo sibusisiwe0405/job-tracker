@@ -17,16 +17,18 @@ async function fetchApplications() {
 
 function renderApplications() {
   const grid = document.getElementById('applications-grid');
+
+
   const filtered = currentFilter === 'All'
     ? allApplications
     : allApplications.filter(a => a.status === currentFilter);
 
   grid.innerHTML = '';
-
+  
   if (filtered.length === 0) {
     grid.innerHTML = '<p class="empty-state">No applications found.</p>';
     return;
-  }
+  } 
 
   filtered.forEach(app => {
     const date = new Date(app.appliedDate).toLocaleDateString('en-ZA', {
@@ -70,6 +72,26 @@ function filterApplications(status, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderApplications();
+  updateHeader(status);
+
+  function updateHeader(status) {
+    const titles = {
+      'All': 'All Applications',
+      'Applied': 'Applied Applications',
+      'Interview': 'Applications in Interview',
+      'Offer': 'Applications with Offers',
+      'Rejected': 'Rejected Applications'
+    };
+    const subtitles = {
+      'All': 'Track every opportunity in one place',
+      'Applied': 'Applications you have applied to',
+      'Interview': 'Applications currently in interview stage',
+      'Offer': 'Applications that have received offers',
+      'Rejected': 'Applications that were rejected'
+    };
+    document.querySelector('.header h1').textContent = titles[status] || 'My Applications';
+    document.querySelector('.header p').textContent = subtitles[status] || 'Track every opportunity in one place';
+  }
 }
 
 function toggleInterviewFields() {
