@@ -1,4 +1,4 @@
-const API = 'https://job-tracker-utyx.onrender.com';
+const API = 'https://job-tracker-utyx.onrender.com/api/applications';
 let allApplications = [];
 let currentFilter = 'All';
 
@@ -11,7 +11,7 @@ async function fetchApplications() {
     renderApplications();
     updateStats();
   } catch (err) {
-    console.error('Error fetching applications:', err);
+    console.log('Error fetching applications:', err);
   }
 }
 
@@ -341,7 +341,7 @@ console.log('data being sent:', JSON.stringify(data));
       fetchApplications();
     }
   } catch (err) {
-    console.error('Error saving application:', err);
+    console.log('Error saving application:', err);
   }
 }
 
