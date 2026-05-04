@@ -1,4 +1,4 @@
-const API = 'https://job-tracker-sibusisiwe.up.railway.app/api/applications';
+const API = 'https://job-tracker-utyx.onrender.com';
 let allApplications = [];
 let currentFilter = 'All';
 
